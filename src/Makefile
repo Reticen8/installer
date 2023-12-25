@@ -1,6 +1,6 @@
-SCRIPTS=	opnsense.sh opnsense-import.sh opnsense-install.sh \
-		opnsense-reset.sh opnsense-rootpass.sh opnsense-ufs.sh \
-		opnsense-zfs.sh opnsense.subr.sh
+SCRIPTS=	reticen8.sh reticen8-import.sh reticen8-install.sh \
+		reticen8-reset.sh reticen8-rootpass.sh reticen8-ufs.sh \
+		reticen8-zfs.sh reticen8.subr.sh
 
 MAN=		# not needed
 

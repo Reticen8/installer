@@ -1,6 +1,6 @@
 #!/bin/sh
 #-
-# Copyright (c) 2019-2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2019-2021 Franco Fichtner <franco@reticen8.com>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -30,12 +30,12 @@ SIZE_MIN=$((4 * 1024 * 1024 * 1024))
 SIZE_SWAP=$((8 * 1024 * 1024 * 1024))
 SIZE_SWAPMIN=$((30 * 1024 * 1024 * 1024))
 
-OPNSENSE_IMPORTER="/usr/local/sbin/opnsense-importer"
+RETICEN8_IMPORTER="/usr/local/sbin/reticen8-importer"
 
-opnsense_load_disks()
+reticen8_load_disks()
 {
-	OPNSENSE_SDISKS=
-	OPNSENSE_DISKS=
+	RETICEN8_SDISKS=
+	RETICEN8_DISKS=
 
 	for DEVICE in $(find /dev -d 1 \! -type d); do
 		DEVICE=${DEVICE##/dev/}
@@ -55,47 +55,47 @@ opnsense_load_disks()
 			NAME=$(dmesg | grep "^${DEVICE}:" | head -n 1 | cut -d ' ' -f2- | tr -d '<' | cut -d '>' -f1 | tr -cd "[:alnum:][:space:]")
 			eval export ${DEVICE}_name='${NAME:-Unknown disk}'
 
-			OPNSENSE_DISKS="${OPNSENSE_DISKS} ${DEVICE}"
+			RETICEN8_DISKS="${RETICEN8_DISKS} ${DEVICE}"
 		fi
 	done
 
-	for DISK in ${OPNSENSE_DISKS}; do
+	for DISK in ${RETICEN8_DISKS}; do
 		eval SIZE="\$${DISK}_size"
 		eval NAME="\$${DISK}_name"
-		OPNSENSE_SDISKS="${OPNSENSE_SDISKS}\"${DISK}\" \"<${NAME}> ($((SIZE / 1024 /1024 / 1024))GB)\"
+		RETICEN8_SDISKS="${RETICEN8_SDISKS}\"${DISK}\" \"<${NAME}> ($((SIZE / 1024 /1024 / 1024))GB)\"
 "
 	done
 
-	export OPNSENSE_SDISKS # disk menu
-	export OPNSENSE_DISKS # raw disks
+	export RETICEN8_SDISKS # disk menu
+	export RETICEN8_DISKS # raw disks
 
-	OPNSENSE_SPOOLS=
-	OPNSENSE_POOLS=
+	RETICEN8_SPOOLS=
+	RETICEN8_POOLS=
 
-	ZFSPOOLS=$(${OPNSENSE_IMPORTER} -z | tr ' ' ',')
+	ZFSPOOLS=$(${RETICEN8_IMPORTER} -z | tr ' ' ',')
 
 	for ZFSPOOL in ${ZFSPOOLS}; do
 		ZFSNAME=$(echo ${ZFSPOOL} | awk -F, '{ print $1 }')
 		ZFSGUID=$(echo ${ZFSPOOL} | awk -F, '{ print $2 }')
 		ZFSSIZE=$(echo ${ZFSPOOL} | awk -F, '{ print $3 }')
-		OPNSENSE_POOLS="${OPNSENSE_POOLS} ${ZFSNAME}"
-		OPNSENSE_SPOOLS="${OPNSENSE_SPOOLS}\"${ZFSNAME}\" \"<${ZFSGUID}> (${ZFSSIZE})\"
+		RETICEN8_POOLS="${RETICEN8_POOLS} ${ZFSNAME}"
+		RETICEN8_SPOOLS="${RETICEN8_SPOOLS}\"${ZFSNAME}\" \"<${ZFSGUID}> (${ZFSSIZE})\"
 "
 	done
 
-	export OPNSENSE_SPOOLS # zfs pool menu
-	export OPNSENSE_POOLS # raw zfs pools
+	export RETICEN8_SPOOLS # zfs pool menu
+	export RETICEN8_POOLS # raw zfs pools
 }
 
-opnsense_info()
+reticen8_info()
 {
-	dialog --backtitle "OPNsense Installer" --title "${1}" \
+	dialog --backtitle "Reticen8 Installer" --title "${1}" \
 	    --msgbox "${2}" 0 0
 }
 
-opnsense_fatal()
+reticen8_fatal()
 {
-	dialog --backtitle "OPNsense Installer" --title "${1}" \
+	dialog --backtitle "Reticen8 Installer" --title "${1}" \
 	    --ok-label "Cancel" --msgbox "${2}" 0 0
 	exit 1
 }

@@ -1,6 +1,6 @@
 #!/bin/sh
 #-
-# Copyright (c) 2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2021 Franco Fichtner <franco@reticen8.com>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -38,10 +38,10 @@ fatal()
 	# reverse log to show abort reason on top
 	tail -r ${LOGFILE} > ${LOGTEMP}
 
-	dialog --clear --backtitle "OPNsense Installer" \
+	dialog --clear --backtitle "Reticen8 Installer" \
 	    --title "Installation Error" --textbox ${LOGTEMP} 22 77
 
-	dialog --backtitle "OPNsense Installer" --title "Installation Abort" \
+	dialog --backtitle "Reticen8 Installer" --title "Installation Abort" \
 	    --no-label "Abort" --yes-label "Continue" --yesno \
 	    "An installation error occurred. Would you like to attempt to continue the installation anyway?" 0 0
 
@@ -60,7 +60,7 @@ progress()
 	[ "${MTREE}" -ge 0 ] && MTREEL="-${MTREE}"
 	[ "${BOOTL}" -ge 0 ] && BOOTL="-${BOOT}"
 
-	dialog --backtitle "OPNsense Installer" \
+	dialog --backtitle "Reticen8 Installer" \
 	    --title "Installation Progress" "${@}" \
 	    --mixedgauge "" 0 0 ${ALL} \
 	    "Cloning current system"    "${CPDUPL}" \

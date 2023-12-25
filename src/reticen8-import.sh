@@ -1,6 +1,6 @@
 #!/bin/sh
 #-
-# Copyright (c) 2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2021 Franco Fichtner <franco@reticen8.com>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -24,23 +24,23 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-. /usr/libexec/bsdinstall/opnsense.subr || exit 1
+. /usr/libexec/bsdinstall/reticen8.subr || exit 1
 
-opnsense_load_disks
+reticen8_load_disks
 
-[ -z "${OPNSENSE_SDISKS}${OPNSENSE_SPOOLS}" ] && opnsense_fatal "Import Configuration" "No suitable disks found in the system"
+[ -z "${RETICEN8_SDISKS}${RETICEN8_SPOOLS}" ] && reticen8_fatal "Import Configuration" "No suitable disks found in the system"
 
 exec 3>&1
-DISK=`echo ${OPNSENSE_SDISKS} ${OPNSENSE_SPOOLS} | xargs dialog --backtitle "OPNsense Installer" \
+DISK=`echo ${RETICEN8_SDISKS} ${RETICEN8_SPOOLS} | xargs dialog --backtitle "Reticen8 Installer" \
 	--title "Import Configuration" --cancel-label "Cancel" \
 	--menu "Please select a disk to continue." \
 	0 0 0 2>&1 1>&3` || exit 1
 exec 3>&-
 
-[ -z "${DISK}" ] && opnsense_fatal "Import Configuration" "No valid disk was selected"
+[ -z "${DISK}" ] && reticen8_fatal "Import Configuration" "No valid disk was selected"
 
-if ${OPNSENSE_IMPORTER} ${DISK} 2>&1; then
-	opnsense_info "Import Configuration" "Configuration import completed"
+if ${RETICEN8_IMPORTER} ${DISK} 2>&1; then
+	reticen8_info "Import Configuration" "Configuration import completed"
 else
-	opnsense_fatal "Import Configuration" "Configuration import failed"
+	reticen8_fatal "Import Configuration" "Configuration import failed"
 fi

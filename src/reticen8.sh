@@ -2,7 +2,7 @@
 #-
 # Copyright (c) 2011 Nathan Whitehorn
 # Copyright (c) 2013-2018 Devin Teske
-# Copyright (c) 2019-2022 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2019-2022 Franco Fichtner <franco@reticen8.com>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,7 @@ hline_arrows_tab_enter="Press arrows, TAB or ENTER"
 hline_arrows_tab_space_enter="Press arrows, TAB, SPACE or ENTER"
 msg_abort="Abort"
 msg_exit="Exit"
-msg_freebsd_installer="OPNsense Installer"
+msg_freebsd_installer="Reticen8 Installer"
 msg_gpt_active_fix="Your hardware is known to have issues booting in CSM/Legacy/BIOS mode from GPT partitions that are not set active. Would you like the installer to apply this workaround for you?"
 msg_lenovo_fix="Your model of Lenovo is known to have a BIOS bug that prevents it booting from GPT partitions without UEFI. Would you like the installer to apply a workaround for you?"
 msg_an_installation_step_has_been_aborted="An installation step has been aborted. Would you like\nto restart the installation or exit the installer?"
@@ -130,8 +130,8 @@ dialog_workaround()
 
 f_dprintf "Began Installation at %s" "$( date )"
 
-PRODUCT_NAME=$(opnsense-version -N)
-PRODUCT_VERSION=$(opnsense-version -V)
+PRODUCT_NAME=$(reticen8-version -N)
+PRODUCT_VERSION=$(reticen8-version -V)
 
 rm -rf $BSDINSTALL_TMPETC
 mkdir $BSDINSTALL_TMPETC
@@ -265,7 +265,7 @@ ${CHOICESZFS}\"Other Modes >>\" \"Extended Installation\" \
 while :; do
 
 exec 3>&1
-CHOICE=`echo ${CHOICES} | xargs dialog --backtitle "OPNsense Installer" \
+CHOICE=`echo ${CHOICES} | xargs dialog --backtitle "Reticen8 Installer" \
 	--title "${PRODUCT_NAME} ${PRODUCT_VERSION}" --cancel-label "Exit" \
 	--menu "Choose one of the following tasks to perform." \
 	0 0 0 2>&1 1>&3` || exit 1
@@ -274,19 +274,19 @@ exec 3>&-
 case "${CHOICE}" in
 "Install (UFS)")
 	export WORKAROUND_HYBRID=1
-	bsdinstall opnsense-ufs || error "Partitioning error"
+	bsdinstall reticen8-ufs || error "Partitioning error"
 	bsdinstall mount || error "Failed to mount filesystem"
 	break
 	;;
 "Install (ZFS)")
 	export WORKAROUND_HYBRID=1
-	bsdinstall opnsense-zfs || error "Partitioning error"
+	bsdinstall reticen8-zfs || error "Partitioning error"
 	bsdinstall mount || error "Failed to mount filesystem"
 	break
 	;;
 "Other Modes >>")
 	exec 3>&1
-	PARTMODE=`echo ${PMODES} | xargs dialog --backtitle "OPNsense Installer" \
+	PARTMODE=`echo ${PMODES} | xargs dialog --backtitle "Reticen8 Installer" \
 	--title "Select Task" --cancel-label "Back" \
 	--menu "Choose one of the following tasks to perform." \
 	0 0 0 2>&1 1>&3` || PARTMODE=Exit
@@ -321,10 +321,10 @@ case "${CHOICE}" in
 	esac
 	;;
 "Import Config")
-	bsdinstall opnsense-import
+	bsdinstall reticen8-import
 	;;
 "Password Reset")
-	bsdinstall opnsense-reset
+	bsdinstall reticen8-reset
 	;;
 "Force Reboot")
 	exit 0 # "this is fine"
@@ -336,7 +336,7 @@ esac
 
 done
 
-bsdinstall opnsense-install || error "Failed to install"
+bsdinstall reticen8-install || error "Failed to install"
 
 # Set up boot loader
 bsdinstall bootconfig || error "Failed to configure bootloader"
@@ -345,7 +345,7 @@ trap true SIGINT	# This section is optional
 
 finalconfig() {
 	exec 3>&1
-	REVISIT=$(dialog --backtitle "OPNsense Installer" \
+	REVISIT=$(dialog --backtitle "Reticen8 Installer" \
 	    --title "Final Configuration" --no-cancel --menu \
 	    "Setup of your ${PRODUCT_NAME} system is nearly complete." 0 0 0 \
 		"Root Password" "Change root password" \
@@ -354,7 +354,7 @@ finalconfig() {
 
 	case "$REVISIT" in
 	"Root Password")
-		bsdinstall opnsense-rootpass
+		bsdinstall reticen8-rootpass
 		finalconfig
 		;;
 	esac
